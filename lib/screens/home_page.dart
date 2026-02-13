@@ -18,17 +18,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // --- TUS VARIABLES RECUPERADAS ---
   int level = 1;
   int xpToday = 0;
   int xpGoal = 300;
   int ritualsDone = 0;
-  int streak = 0;
-  int essence = 0;
+  int essenceTotal = 450; // La esencia que tenías en el perfil
 
   final rituals = <RitualItem>[
     RitualItem('Sesión de Enfoque', 25, 30, 12),
     RitualItem('Lectura Arcana', 20, 22, 10),
-    RitualItem('Práctica de Hechizos', 15, 18, 8),
+    RitualItem('Práctica de Hechizos', 1, 18, 8),
   ];
 
   @override
@@ -37,113 +37,140 @@ class _HomePageState extends State<HomePage> {
     final progress = (xpToday / xpGoal).clamp(0.0, 1.0);
 
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       children: [
-        _infoCard(
-          context,
-          title: 'Nivel $level',
-          subtitle: '$ritualsDone rituales completados · Racha: $streak',
-          trailing: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+        // --- CUADRO DE ESENCIA Y PROGRESO (ESTILO LOGIN) ---
+        Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: const Color(0xFF14121B), // El color exacto de tu login
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: cs.primary.withOpacity(0.2)),
+            boxShadow: [
+              BoxShadow(
+                color: cs.primary.withOpacity(0.05),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              )
+            ],
+          ),
+          child: Column(
             children: [
-              Text('$xpToday / $xpGoal XP', style: const TextStyle(fontWeight: FontWeight.w700)),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: 140,
-                child: LinearProgressIndicator(value: progress, minHeight: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _statusBadge('NIVEL $level', cs.primary),
+                  _statusBadge('✨ $essenceTotal ESENCIA', Colors.amber),
+                ],
+              ),
+              const SizedBox(height: 25),
+              const Text(
+                'ESENCIA RECOLECTADA HOY',
+                style: TextStyle(fontSize: 12, letterSpacing: 1.5, color: Colors.white54),
+              ),
+              const SizedBox(height: 10),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 10,
+                  backgroundColor: Colors.white.withOpacity(0.05),
+                  valueColor: AlwaysStoppedAnimation<Color>(cs.primary),
+                ),
+              ),
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('$xpToday / $xpGoal XP', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text('$ritualsDone RITUALES', style: const TextStyle(color: Colors.white38, fontSize: 13)),
+                ],
               ),
             ],
           ),
         ),
-        const SizedBox(height: 12),
-        _infoCard(
-          context,
-          title: 'Esencia Arcana',
-          subtitle: 'Moneda para desbloquear cartas',
-          trailing: Text('$essence ✨', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: cs.primary)),
+        
+        const SizedBox(height: 35),
+        const Text(
+          'GRIMORIO DE RITUALES', 
+          style: TextStyle(color: Colors.white38, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 2)
         ),
-        const SizedBox(height: 18),
-        const Text('Run de hoy', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
-        const SizedBox(height: 6),
-        const Text('Completa rituales para ganar XP y desbloquear cartas.'),
-        const SizedBox(height: 12),
-        ...rituals.map((r) => _ritualCard(context, r)),
+        const SizedBox(height: 15),
+
+        // Lista de rituales
+        ...rituals.map((r) => _ritualCard(r)),
       ],
     );
   }
 
-  Widget _infoCard(BuildContext context,
-      {required String title, required String subtitle, required Widget trailing}) {
-    final cs = Theme.of(context).colorScheme;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Row(
-          children: [
-            Icon(Icons.auto_awesome, color: cs.primary),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-                  const SizedBox(height: 4),
-                  Text(subtitle, style: const TextStyle(color: Colors.white70)),
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-            trailing,
-          ],
-        ),
+  Widget _statusBadge(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1),
       ),
     );
   }
 
-  Widget _ritualCard(BuildContext context, RitualItem r) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+  Widget _ritualCard(RitualItem r) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: const Color(0xFF14121B),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(r.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
-                ),
-                Text('${r.minutes} min', style: const TextStyle(color: Colors.white70)),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Text('⭐ ${r.xp} XP', style: const TextStyle(color: Colors.white70)),
-                const SizedBox(width: 12),
-                Text('✨ ${r.essence}', style: const TextStyle(color: Colors.white70)),
-                const Spacer(),
-                FilledButton(
-                  onPressed: () async {
-                    final completed = await Navigator.push<bool>(
-                      context,
-                      MaterialPageRoute(builder: (_) => RitualTimerPage(ritual: r)),
-                    );
-                    if (completed == true) {
-                      setState(() {
-                        ritualsDone += 1;
-                        xpToday += r.xp;
-                        essence += r.essence;
-                      });
-                    }
-                  },
-                  child: const Text('Iniciar'),
+                Text(r.title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    const Icon(Icons.timer_outlined, size: 14, color: Colors.white38),
+                    const SizedBox(width: 4),
+                    Text('${r.minutes} min', style: const TextStyle(color: Colors.white38, fontSize: 13)),
+                    const SizedBox(width: 12),
+                    const Icon(Icons.auto_awesome, size: 14, color: Colors.amber),
+                    const SizedBox(width: 4),
+                    Text('${r.essence}', style: const TextStyle(color: Colors.white38, fontSize: 13)),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(height: 6),
-            const Text('Estado: Pendiente', style: TextStyle(color: Colors.white54)),
-          ],
-        ),
+          ),
+          FilledButton(
+            onPressed: () async {
+              final completed = await Navigator.push<bool>(
+                context, 
+                MaterialPageRoute(builder: (_) => RitualTimerPage(ritual: r))
+              );
+              
+              if (completed == true) {
+                setState(() {
+                  ritualsDone += 1;
+                  xpToday += r.xp;
+                  essenceTotal += r.essence;
+                });
+              }
+            },
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+            ),
+            child: const Text('Iniciar'),
+          ),
+        ],
       ),
     );
   }

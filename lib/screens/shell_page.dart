@@ -21,9 +21,9 @@ class _ShellPageState extends State<ShellPage> {
   ];
 
   String get _title => switch (_index) {
-        0 => 'Run de hoy',
-        1 => 'Códice',
-        _ => 'Perfil',
+        0 => 'RUN DE HOY',
+        1 => 'CÓDICE',
+        _ => 'PERFIL',
       };
 
   @override
@@ -36,9 +36,21 @@ class _ShellPageState extends State<ShellPage> {
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: 'Inicio'),
-          NavigationDestination(icon: Icon(Icons.style), label: 'Cartas'),
-          NavigationDestination(icon: Icon(Icons.person), label: 'Perfil'),
+          NavigationDestination(
+            icon: Icon(Icons.auto_awesome_outlined), 
+            selectedIcon: Icon(Icons.auto_awesome), 
+            label: 'Run'
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.menu_book_outlined), 
+            selectedIcon: Icon(Icons.menu_book), 
+            label: 'Códice'
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline), 
+            selectedIcon: Icon(Icons.person), 
+            label: 'Perfil'
+          ),
         ],
       ),
     );

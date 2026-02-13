@@ -21,7 +21,17 @@ class AppDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.home),
               title: const Text('Inicio'),
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                // 1. Cerramos el drawer
+                Navigator.pop(context);
+                // 2. Navegamos a la Shell (que contiene la HomePage)
+                // Usamos pushNamedAndRemoveUntil para limpiar la pila si venimos de Créditos
+                Navigator.pushNamedAndRemoveUntil(
+                  context, 
+                  AppRoutes.shell, 
+                  (route) => false
+                );
+              },
             ),
             ListTile(
               leading: const Icon(Icons.auto_awesome),

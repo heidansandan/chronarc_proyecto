@@ -12,16 +12,26 @@ class RitualTimerPage extends StatefulWidget {
 
 class _RitualTimerPageState extends State<RitualTimerPage> {
   Timer? _timer;
-  late int _total;
   late int _remaining;
   bool _running = false;
 
   @override
   void initState() {
     super.initState();
-    _total = widget.ritual.minutes * 60;
-    _remaining = _total;
+    _remaining = widget.ritual.minutes * 60;
     _start();
+  }
+
+  void _start() {
+    setState(() => _running = true);
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (_remaining > 0) {
+        setState(() => _remaining--);
+      } else {
+        _timer?.cancel();
+        Navigator.pop(context, true);
+      }
+    });
   }
 
   @override
@@ -30,81 +40,60 @@ class _RitualTimerPageState extends State<RitualTimerPage> {
     super.dispose();
   }
 
-  void _start() {
-    _timer?.cancel();
-    setState(() => _running = true);
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (!mounted) return;
-      if (_remaining <= 0) {
-        _timer?.cancel();
-        setState(() => _running = false);
-        _finish();
-      } else {
-        setState(() => _remaining -= 1);
-      }
-    });
-  }
-
-  void _pause() {
-    _timer?.cancel();
-    setState(() => _running = false);
-  }
-
-  void _finish() {
-    Navigator.pop(context, true); // completado
-  }
-
-  void _cancel() {
-    Navigator.pop(context, false); // no completado
-  }
-
-  String _fmt(int s) {
-    final m = (s ~/ 60).toString().padLeft(2, '0');
-    final sec = (s % 60).toString().padLeft(2, '0');
-    return '$m:$sec';
-  }
+  String _fmt(int s) => '${(s ~/ 60).toString().padLeft(2, '0')}:${(s % 60).toString().padLeft(2, '0')}';
 
   @override
   Widget build(BuildContext context) {
-    final progress = 1 - (_remaining / _total);
+    final cs = Theme.of(context).colorScheme;
+    
     return Scaffold(
-      appBar: AppBar(title: Text(widget.ritual.title)),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      appBar: AppBar(title: const Text('RITUAL')),
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [cs.primary.withOpacity(0.1), Colors.transparent],
+          ),
+        ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 18),
-            Text(_fmt(_remaining), style: const TextStyle(fontSize: 56, fontWeight: FontWeight.w900)),
-            const SizedBox(height: 18),
-            SizedBox(
-              height: 220,
-              width: 220,
-              child: CircularProgressIndicator(
-                value: progress.clamp(0.0, 1.0),
-                strokeWidth: 12,
-              ),
-            ),
-            const SizedBox(height: 14),
-            Text(_running ? 'En progreso…' : 'Pausado', style: const TextStyle(color: Colors.white70)),
-            const Spacer(),
-            Row(
+            Text(widget.ritual.title.toUpperCase(), style: const TextStyle(letterSpacing: 3, color: Colors.white54)),
+            const SizedBox(height: 50),
+            Stack(
+              alignment: Alignment.center,
               children: [
-                Expanded(
-                  child: FilledButton(
-                    onPressed: _running ? _pause : _start,
-                    child: Text(_running ? 'Pausar' : 'Reanudar'),
+                SizedBox(
+                  height: 250, width: 250,
+                  child: CircularProgressIndicator(
+                    value: 1 - (_remaining / (widget.ritual.minutes * 60)),
+                    strokeWidth: 8,
+                    strokeCap: StrokeCap.round,
+                    backgroundColor: Colors.white10,
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: _cancel,
-                    child: const Text('Cancelar'),
-                  ),
-                ),
+                Text(_fmt(_remaining), style: const TextStyle(fontSize: 60, fontWeight: FontWeight.w200)),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 60),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton.filledTonal(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.close),
+                  padding: const EdgeInsets.all(15),
+                ),
+                const SizedBox(width: 20),
+                IconButton.filled(
+                  onPressed: () => setState(() => _running ? _timer?.cancel() : _start()),
+                  icon: Icon(_running ? Icons.pause : Icons.play_arrow),
+                  padding: const EdgeInsets.all(20),
+                ),
+              ],
+            )
           ],
         ),
       ),
