@@ -8,8 +8,6 @@ Para entender mejor cómo funciona la app o cómo está construida, consulta los
 * [Manual de Usuario](./docs/manual_usuario.pdf)
 * [Manual Técnico](./docs/manual_tecnico.pdf)
 
-*(Si usaste .md, cambia la extensión de arriba de .pdf a .md)*
-
 ## 🛠️ Tecnologías utilizadas
 * **Frontend:** Flutter & Dart
 * **Backend:** Firebase (Auth & Firestore)
