@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/login_page.dart';
 
+// Pantalla de bienvenida que se muestra al abrir la aplicación
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
@@ -14,6 +15,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+    // Simula un tiempo de carga de 3 segundos antes de proceder
     _waitFuture = Future.delayed(const Duration(seconds: 3));
   }
 
@@ -22,17 +24,18 @@ class _SplashPageState extends State<SplashPage> {
     return FutureBuilder<void>(
       future: _waitFuture,
       builder: (context, snapshot) {
-        // Mientras no termine, mostramos la pantalla de carga
+        // Mientras no termine la espera, mostramos la visual de carga
         if (snapshot.connectionState != ConnectionState.done) {
           return const _SplashView();
         }
-        // Cuando termine, mostramos Login directamente (sin navegación)
+        // Una vez transcurrido el tiempo, redirigimos a la pantalla de Login
         return const LoginPage();
       },
     );
   }
 }
 
+// Vista estética de la Splash Screen (Logotipo, Nombre y Barra de carga)
 class _SplashView extends StatelessWidget {
   const _SplashView();
 
@@ -59,6 +62,7 @@ class _SplashView extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // Contenedor del icono central con efectos de brillo (Glow)
                 Container(
                   width: 200,
                   height: 200,
@@ -89,7 +93,7 @@ class _SplashView extends StatelessWidget {
                   ),
                 ),
 
-                // TEXTO CON GRADIENTE HORIZONTAL
+                // Nombre de la App con gradiente de color aplicado al texto
                 ShaderMask(
                   shaderCallback: (bounds) => const LinearGradient(
                     begin: Alignment.centerLeft,
@@ -118,7 +122,7 @@ class _SplashView extends StatelessWidget {
                 ),
                 const SizedBox(height: 50),
 
-                // BARRA DE CARGA
+                // Indicador de progreso estilizado
                 SizedBox(
                   width: 220,
                   height: 10,

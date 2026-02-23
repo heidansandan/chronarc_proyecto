@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "822029900467",
+    "project_id": "chronarc-8c034",
+    "storage_bucket": "chronarc-8c034.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:822029900467:android:1cea3a65fafecd57bd2ec6",
+        "android_client_info": {
+          "package_name": "com.example.crhonarc_proyecto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiHavzvlkrX3tMnoKETqaEqFi-CzhFu38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../routes/app_router.dart';
 
+// Widget que representa el menú lateral de navegación
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
@@ -10,6 +11,7 @@ class AppDrawer extends StatelessWidget {
       child: SafeArea(
         child: ListView(
           children: [
+            // Cabecera del menú con el nombre de la app
             const ListTile(
               title: Text(
                 'CHRONARC',
@@ -18,14 +20,13 @@ class AppDrawer extends StatelessWidget {
               subtitle: Text('Foco y rituales'),
             ),
             const Divider(),
+            // Opción para volver a la pantalla principal
             ListTile(
               leading: const Icon(Icons.home),
               title: const Text('Inicio'),
               onTap: () {
-                // 1. Cerramos el drawer
-                Navigator.pop(context);
-                // 2. Navegamos a la Shell (que contiene la HomePage)
-                // Usamos pushNamedAndRemoveUntil para limpiar la pila si venimos de Créditos
+                Navigator.pop(context); // Cierra el drawer
+                // Navega a la Shell limpiando el historial para evitar bucles
                 Navigator.pushNamedAndRemoveUntil(
                   context, 
                   AppRoutes.shell, 
@@ -33,6 +34,7 @@ class AppDrawer extends StatelessWidget {
                 );
               },
             ),
+            // Opción para ver los créditos del proyecto
             ListTile(
               leading: const Icon(Icons.auto_awesome),
               title: const Text('Créditos'),
@@ -42,6 +44,7 @@ class AppDrawer extends StatelessWidget {
               },
             ),
             const Divider(),
+            // Opción para desconectar la cuenta actual
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Cerrar sesión'),

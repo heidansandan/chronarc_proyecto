@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import '../widgets/app_drawer.dart'; // Importamos tu drawer
+import '../widgets/app_drawer.dart'; // Importación del menú lateral personalizado
 
 class CreditsPage extends StatelessWidget {
   const CreditsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
-      // Añadimos el Drawer a la pantalla de créditos
+      // Se integra el Drawer para permitir la navegación desde esta pantalla
       drawer: const AppDrawer(), 
       appBar: AppBar(
         title: const Text('Créditos'),
         centerTitle: true,
-        // Forzamos el icono del Drawer en lugar de la flecha de atrás
+        // Se usa un Builder para obtener el context adecuado y poder abrir el Drawer
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu),
@@ -25,7 +24,7 @@ class CreditsPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          // Cabecera con Logo y Versión
+          // Sección de Cabecera: Icono místico, nombre de la app y eslogan
           Center(
             child: Column(
               children: [
@@ -50,7 +49,7 @@ class CreditsPage extends StatelessWidget {
           ),
           const SizedBox(height: 30),
 
-          // Sección Desarrollador
+          // Tarjeta de información del Desarrollador
           _buildCreditCard(
             context,
             icon: Icons.code,
@@ -59,7 +58,7 @@ class CreditsPage extends StatelessWidget {
             content: 'Proyecto desarrollado como parte del curso de 2º DAM, combinando productividad con una estética única de magia futurista.',
           ),
 
-          // Sección Tecnologías
+          // Tarjeta que detalla las tecnologías del Stack Técnico
           _buildSectionCard(
             context,
             icon: Icons.layers,
@@ -68,12 +67,10 @@ class CreditsPage extends StatelessWidget {
             items: [
               'Flutter - Framework principal',
               'Dart - Lenguaje de programación',
-              'Material 3 - Sistema de diseño',
-              'Image Picker - Gestión de archivos',
             ],
           ),
 
-          // Sección Inspiración
+          // Tarjeta con los conceptos creativos de diseño
           _buildSectionCard(
             context,
             icon: Icons.auto_stories,
@@ -87,6 +84,7 @@ class CreditsPage extends StatelessWidget {
             ],
           ),
 
+          // Pie de página con copyright simbólico
           const SizedBox(height: 20),
           const Center(
             child: Text('2026 • Chronarc Project', style: TextStyle(color: Colors.white24)),
@@ -97,7 +95,7 @@ class CreditsPage extends StatelessWidget {
     );
   }
 
-  // Widget para tarjetas con texto largo (se mantiene igual)
+  // Widget auxiliar para crear tarjetas con bloques de texto descriptivo
   Widget _buildCreditCard(BuildContext context, {
     required IconData icon,
     required String title,
@@ -115,6 +113,7 @@ class CreditsPage extends StatelessWidget {
           children: [
             Row(
               children: [
+                // Contenedor decorativo para el icono de la sección
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -141,7 +140,7 @@ class CreditsPage extends StatelessWidget {
     );
   }
 
-  // Widget para tarjetas con listas (se mantiene igual)
+  // Widget auxiliar para crear tarjetas que contienen listas de elementos (bullets)
   Widget _buildSectionCard(BuildContext context, {
     required IconData icon,
     required String title,
@@ -171,6 +170,7 @@ class CreditsPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 15),
+            // Mapeo de la lista de strings a widgets individuales con un punto (bullet) de color
             ...items.map((item) => Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(
